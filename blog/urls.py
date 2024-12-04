@@ -9,6 +9,7 @@ register_converter(converters.FourDigitYearConverter,type_name="year_from_4_numb
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("about", views.about, name="about"),
     path("categories/", views.categories, name="categories"), #http://127.0.0.1:8000/categories/
     path("categories/<int:cat_id>", views.categories_by_id), #http://127.0.0.1:8000/categories/1
     path("categories/<slug:cat_slug>", views.categories_by_slug, name="cat_slug"),  # http://127.0.0.1:8000/categories/news-about-armenia_12
