@@ -2,10 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{{title}}</title>
+  <title>{{ title|default:"There isn't title" }}</title>
 </head>
 <body>
-  <h1>{{title}}</h1>
-<p>{{description}}</p>
+<nav>
+  {{ menu|join:" | " }}
+</nav>
+  <h1>{{ title|cut:"P" }}</h1>
+<p>{{ description }}</p>
+
+
+
+<div>
+  <p>{{float|divisibleby:"3"}}</p>
+  <p>{{int|add:"5"}}</p>
+  <p>{{lst}}}</p>
+  <p>{{set}}</p>
+  <p>{{ddd}}</p>
+  <p>{{cls.a}}  {{cls.b}}</p>
+  <p>{{ url }}</p>
+
+</div>
 </body>
 </html>
