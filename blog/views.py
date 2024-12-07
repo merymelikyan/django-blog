@@ -59,7 +59,7 @@ data_from_db = [
 
 def index(request):
   data = {
-    "title": "",
+    "title": "Home Page",
     "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
 	"posts": data_from_db
   }
@@ -69,7 +69,7 @@ def about(request):
   return render(request, "blog/about.html", {"title":"About Page"})
 
 
-def read_more(request, post_id):
+def post_more(request, post_id):
   return  render(request, "blog/read-more.html", {"title":"Read More"})
 
 
