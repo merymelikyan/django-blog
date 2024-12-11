@@ -1,16 +1,12 @@
 {% extends "base.html" %}
-{% block title %} {{ title }} {% endblock %}
 
 {% block content %}
-{% load blog_tags %}
     <header>
         <h1>{{ title }}</h1>
         <p>{{ description }}</p>
     </header>
-
-
-   {% include "blog/includes/categories.html" only %}
     <main>
+        <p>{{cat_selected}}</p>
         <h2>Our Latest Posts</h2>
         <ul>
             {% for post in posts %}
@@ -29,6 +25,6 @@
             {% endfor %}
         </ul>
     </main>
-    {% include "blog/includes/categories.html" %}
+
 
 {% endblock %}

@@ -1,26 +1,5 @@
-from django.http import HttpResponse, HttpResponseNotFound, Http404,HttpResponseForbidden
-from django.shortcuts import render, redirect
-from django.urls import reverse
-from django.template.defaultfilters import slugify
-
-menu = [
-	{
-		"link_title": "About Site",
-		"link_url": "about"
-	},
-	{
-		"link_title": "Add Post",
-		"link_url": "add_post"
-	},
-	{
-		"link_title": "Contacts",
-		"link_url": "contacts"
-	},
-	{
-		"link_title": "Login",
-		"link_url": "login"
-	}
-]
+from django.http import HttpResponseNotFound
+from django.shortcuts import render
 
 data_from_db = [
 	{
@@ -57,6 +36,10 @@ data_from_db = [
 	}
 ]
 
+
+
+
+
 categories_from_db = [
 	{"id": 1, "name": "Traveling"},
 	{"id": 2, "name": "Sport"},
@@ -69,7 +52,8 @@ def index(request):
   data = {
     "title": "Home Page",
     "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
-	"posts": data_from_db
+	"posts": data_from_db,
+
   }
   return render(request, "blog/home.html", data)
 
@@ -82,8 +66,12 @@ def show_more(request, post_id):
 
 
 def show_category(request, cat_id):
-  return  render(request, "blog/category.html", {"title":f"Category:{cat_id}"})
-
+  return  render(
+      request, "blog/category.html",
+      {"title":categories_from_db[cat_id - 1].get("name"),
+       "cat_selected": cat_id
+       },
+  )
 
 def add_post(request):
   return  render(request, "blog/add-post.html", {"title":"Add Post"})

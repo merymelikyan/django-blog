@@ -2,10 +2,6 @@ def menu_context(request):
 	return {
 		"menu": [
 			{
-				"link_title": "Home",
-				"link_url": "index"
-			},
-			{
 				"link_title": "About Site",
 				"link_url": "about"
 			},
@@ -23,3 +19,8 @@ def menu_context(request):
 			},
 		],
 	}
+
+def category_context(request):
+    return  {
+        "cat_selected": 0
+    }
