@@ -13,11 +13,12 @@ categories_from_db = [
 ]
 
 def index(request):
+    # articles = Article.objects.filter(is_published=1)
 	articles = Article.objects.all()
 	return render(request, "blog/home.html", {"articles": articles})
 
 def about(request):
-   return render(request, "blog/about.html", {"title":"About Page"})
+    return render(request, "blog/about.html", {"title":"About Page"})
 
 
 def show_article(request, article_slug):
@@ -30,14 +31,15 @@ def show_article(request, article_slug):
         "time_update": article.time_update,
         "is_published": article.is_published
     }
-    return render(request, "blog/show-article.html", data)
+    return render(request, "blog/show_article.html", data)
 
 
 def show_category(request, cat_id):
   return  render(
       request, "blog/category.html",
-      {"title":categories_from_db[cat_id - 1].get("name"),
-       "cat_selected": cat_id
+      {
+        "title":categories_from_db[cat_id - 1].get("name"),
+        "cat_selected": cat_id
        },
   )
 
