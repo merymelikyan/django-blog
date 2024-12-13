@@ -360,7 +360,7 @@ template {
 
 @font-face {
    font-family: "m-regular";
-  src: url('static/blog/fonts/regular.ttf') format("ttf");
+  src: url('static/blog/fonts/regular.ttf') format("truetype");
 }
 
 body {
@@ -381,6 +381,7 @@ body {
         justify-content: space-between;
         align-items: center;
         gap: 16px;
+
         .logo {
             h1 {
                 a {
@@ -396,8 +397,10 @@ body {
                 justify-content: space-between;
                 align-items: center;
                 gap: 16px;
+
                 li {
                     list-style-type: none;
+
                     a {
                         text-decoration: none;
                         color: #fff;
@@ -419,9 +422,12 @@ body {
         color: #fff;
 
         .categories {
+            margin-bottom: 0px;
+            margin-top: 0px;
             li {
                 list-style-position: inside;
                 margin-bottom: 8px;
+
                 &.active_cat {
                     color: greenyellow;
                 }
@@ -437,5 +443,20 @@ body {
         flex: 1;
         border: 1px solid red;
         padding: 16px;
+
+        .latest_articles__block {
+            .latest_articles {
+                display: flex;
+                gap: 16px;
+                flex-wrap: wrap;
+
+                .latest_articles__item {
+                    flex: 1 1 240px;
+                    background: #eee;
+                    padding: 16px;
+                    border-radius: 8px;
+                }
+            }
+        }
     }
 }

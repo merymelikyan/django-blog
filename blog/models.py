@@ -12,3 +12,12 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse("article", kwargs={"article_slug": self.slug})
+
+    class Meta:
+        ordering = ["time_create"]
+        indexes = [
+            models.Index(fields=["time_create"])
+        ]
