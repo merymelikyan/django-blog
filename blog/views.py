@@ -1,47 +1,61 @@
 from django.http import HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 
-from .models import Article
+from .models import Article, Category, ArticleTags
 
-
-categories_from_db = [
-	{"id": 1, "name": "Traveling"},
-	{"id": 2, "name": "Sport"},
-	{"id": 3, "name": "IT & Development"},
-	{"id": 4, "name": "Cars"},
-	{"id": 5, "name": "Fashion"},
-]
 
 def index(request):
     # articles = Article.objects.filter(is_published=1)
-	articles = Article.objects.all()
-	return render(request, "blog/home.html", {"articles": articles})
+    articles = Article.published.all()
+    return render(request, "blog/home.html", {"articles": articles})
 
 def about(request):
     return render(request, "blog/about.html", {"title":"About Page"})
 
 
+
+def show_category(request, cat_slug):
+    category = get_object_or_404(Category, slug=cat_slug)
+    articles = Article.published.filter(category_id=category.pk)
+
+    data = {
+        "name": category.name,
+        "slug": category.slug,
+        "id": category.id,
+        "articles": articles,
+        "cat_selected": category.id
+
+    }
+    return  render(request, "blog/category.html",
+       data)
+
 def show_article(request, article_slug):
     article = get_object_or_404(Article, slug=article_slug)
+
 
     data = {
         "title": article.title,
         "content": article.content,
         "time_create": article.time_create,
         "time_update": article.time_update,
-        "is_published": article.is_published
+        "is_published": article.is_published,
+        "tags": article.tags.all()
     }
     return render(request, "blog/show_article.html", data)
 
 
-def show_category(request, cat_id):
-  return  render(
-      request, "blog/category.html",
-      {
-        "title":categories_from_db[cat_id - 1].get("name"),
-        "cat_selected": cat_id
-       },
-  )
+
+def show_tags(request, tag_slug):
+    tag = get_object_or_404(ArticleTags, slug=tag_slug)
+    articles = tag.tags.filter(is_published=Article.Status.PUBLISHED)
+
+    data = {
+        "title": f"Tag: {tag.tag}",
+        "articles": articles,
+    }
+
+    return render(request, "blog/show-tags.html", data)
+
 
 def add_post(request):
   return  render(request, "blog/add-post.html", {"title":"Add Post"})
