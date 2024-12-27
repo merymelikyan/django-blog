@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from .utils import slugify
 
 
 class ArticleManager(models.Manager):
@@ -20,10 +21,13 @@ class Article(models.Model):
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
     is_published =models.BooleanField(choices=tuple(
-		map(lambda x: (bool(x[0]), x[1]), Status.choices)), default=Status.PUBLISHED)
+		      map(lambda x: (bool(x[0]), x[1]), Status.choices)), default=Status.PUBLISHED)
     category = models.ForeignKey("Category", on_delete=models.CASCADE, related_name="items") #Articles_set
     tags = models.ManyToManyField("ArticleTags", blank=True, related_name="tags")
-    adv = models.OneToOneField("Adv", on_delete=models.SET_NULL, related_name="adv", null=True, blank=True)
+    adv = models.OneToOneField(
+         "Adv", on_delete=models.SET_NULL, related_name="adv", null=True, blank=True)
+    author = models.ForeignKey(
+        "Author", on_delete=models.CASCADE, related_name="author")
 
     objects = models.Manager()
     published = ArticleManager()
@@ -33,6 +37,12 @@ class Article(models.Model):
 
     def get_absolute_url(self):
         return reverse("article", kwargs={"article_slug": self.slug})
+
+
+    def save(self, *args, **kwargs):
+          self.slug = slugify(self.title)
+          super().save(*args, **kwargs)
+
 
     class Meta:
         # verbose_name = "Նյութ"
@@ -76,3 +86,14 @@ class Adv(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+
+
+class Author(models.Model):
+	name = models.CharField(max_length=255, db_index=True)
+	articles_qty = models.IntegerField(default=0, db_index=True)
+	
+	def __str__(self):
+		return self.name
+     

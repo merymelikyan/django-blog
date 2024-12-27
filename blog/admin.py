@@ -1,17 +1,49 @@
 from django.contrib import admin, messages
-from .models import Article, Category
+from .models import Article, Category, Author
+
+class AuthorFilter(admin.SimpleListFilter):
+    title = "Filter Authors"
+    parameter_name = "check_author"
+
+    def lookups(self, request, model_admin):
+        return [
+            ("with_author", "With Author"),
+            ("without_author", "Without Author"),
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value() == "with_author":
+            return queryset.filter(author__isnull=False)
+        elif self.value() == "without_author":
+            return queryset.filter(author__isnull=True)
+
+
+@admin.register(Author)
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ["id", "name", "articles_qty"]
+    list_display_links = ["name"]
+    list_per_page = 25
+    ordering = ["-pk"]
+    search_fields = ["name"]
+    search_help_text = "You can search only with author name"
+
 
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
+    #exclude = ["adv"]
+    # readonly_fields = ["slug"]
+    #fields = ["slug","title", "content"]
+    prepopulated_fields = {"slug": ("title", )}
     list_display = ["id", "title", "slug", "is_published", "category", "brief_info"]
-    list_display_links = ["id", "title"]
+    list_display_links = ["id", "title", ]
     list_editable = ["is_published"]
     list_per_page = 25
     ordering = ["-pk"]
     actions = ["set_published", "set_draft"]
     search_fields = ["title", "content", "category__name"]
     search_help_text = "You can search only with title or content"
-    list_filter = ["category__name", "is_published"]
+    list_filter = [AuthorFilter,"category__name", "is_published"]
+    filter_horizontal = ["tags"]
 
 
     @admin.display(description="Short Info", ordering="content")
@@ -29,11 +61,18 @@ class ArticleAdmin(admin.ModelAdmin):
         count = queryset.update(is_published=Article.Status.PUBLISHED)
         self.message_user(request, f"Փըբլիշ է եղել {count} նյութեր", messages.INFO)
 
+
     @admin.action(description="Դարձնել Դրաֆթ")
     def set_draft(self, request, queryset):
         count = queryset.update(is_published=Article.Status.DRAFT)
         self.message_user(request, f"Դրաֆթ է եղել {count} նյութեր", messages.WARNING)
 
+
+
+    @admin.display(description="Short Info", ordering="content")
+    def name_filter(self,  request, queryset):
+
+        return f"Description {len(article.content)} symbols." # type: ignore
 
 
     @admin.register(Category)
@@ -42,5 +81,6 @@ class ArticleAdmin(admin.ModelAdmin):
         list_display_links = ["id", "name"]
         ordering = ["-pk"]
         list_filter = ["name"]
+
 
 
